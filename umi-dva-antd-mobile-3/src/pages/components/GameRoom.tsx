@@ -28,15 +28,16 @@ const GameRoom = (props: any) => {
 
   const gotoChatRoom = () => {
     console.log('123');
-    
-    state.socket.emit('login', {a:123 });
+    const {uid ,username } = state;
+    state.socket.emit('login', {uid, username });
+
   }
 
   return (
     <div className="chat-room">
       <List renderHeader={() => '房间大厅'} className="my-list">
         {gameRooms.map((item: any) => {
-          return <Item arrow="horizontal" multipleLine onClick={() => gotoChatRoom }>
+          return <Item key={item.room_id} arrow="horizontal" multipleLine onClick={() => gotoChatRoom()}>
             {item.roomName} <Brief>人数：{item.peopleNumber} 人</Brief>
           </Item>
         })}
