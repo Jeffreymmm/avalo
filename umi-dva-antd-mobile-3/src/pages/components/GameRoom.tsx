@@ -26,17 +26,22 @@ const GameRoom = (props: any) => {
     });
   }, [state.uid]);
 
-  const gotoChatRoom = () => {
-    console.log('123');
-    
-    state.socket.emit('login', {a:123 });
+  const gotoChatRoom = (item:any) => {
+    console.log(item);
+     const params = {
+      room_id:item.room_id,
+      roomUserName:state.username,
+      UserId:state.uid,
+      roomUserIdentity:'' 
+     } 
+    state.socket.emit('login', params);
   }
 
   return (
     <div className="chat-room">
       <List renderHeader={() => '房间大厅'} className="my-list">
         {gameRooms.map((item: any) => {
-          return <Item arrow="horizontal" multipleLine onClick={() => gotoChatRoom }>
+          return <Item key={item.room_id} arrow="horizontal" multipleLine onClick={() => gotoChatRoom(item) }>
             {item.roomName} <Brief>人数：{item.peopleNumber} 人</Brief>
           </Item>
         })}
