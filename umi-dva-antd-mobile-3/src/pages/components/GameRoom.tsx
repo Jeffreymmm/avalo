@@ -10,11 +10,11 @@ const Item = List.Item;
 const Brief = Item.Brief;
 
 const GameRoom = (props: any) => {
+  console.log(props);
+
   const { state, dispatch }: any = useContext(Context);
-  const [init, setInit] = useState(false);
-
-
   const [gameRooms, setGameRooms] = useState<any>([]); // 房间信息
+  const [selectGameRoom, setSelectGameRoom] = useState<any>({}); // 房间信息
 
   useEffect(() => {
     getGameRooms().then(res => {
@@ -25,9 +25,11 @@ const GameRoom = (props: any) => {
       }
     });
   }, [state.uid]);
-
+  console.log(selectGameRoom);
   const gotoChatRoom = (item: any) => {
     console.log(item);
+    setSelectGameRoom(item);
+
     const params = {
       room_id: item.room_id,
       roomUserName: state.username,
@@ -40,17 +42,18 @@ const GameRoom = (props: any) => {
 
   // 监听消息发送
   const ready = () => {
-    const { socket } = props;
-    setInit(true);
-    socket.on('gotoRoom', (o:any) => { 
-      console.log(o);
+    console.log(this);
+    console.log(selectGameRoom);
 
-      router.push('/ChatRoom')
-    });
   };
-  if (!init) {
-    ready();
-  }
+
+  useEffect(() => {
+    const { socket } = props;
+    if(!socket) return;
+    socket.on('gotoRoom', (o: any) => {
+      router.push({pathname:'./ChatRoom',query:{id:1111}})
+    });
+  }, [props.socket,selectGameRoom]);
 
   return (
     <div className="chat-room">

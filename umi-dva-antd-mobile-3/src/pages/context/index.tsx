@@ -8,7 +8,7 @@ interface StateType {
   uid: string;
   socket: any;
   messages: [];
-  onlineUsers: { [key: string]: string };
+  onlineUsers: [];
   onlineCount: number;
   userhtml: string;
 }
@@ -18,7 +18,7 @@ const initValue: StateType = {
   uid: '',
   socket: io('http://127.0.0.1:7001'),
   messages: [],
-  onlineUsers: {},
+  onlineUsers: [],
   onlineCount: 0,
   userhtml: ''
 };
@@ -61,14 +61,21 @@ const userMessage = (usrMsg: UserMessage, state): object => {
     messages: state.messages.concat(usrMsg.message)
   };
 };
-interface Payload extends UserMessage, SystemMessage, Login {}
+
+const roomInfo = (sysMsg: any): object => {
+  return {
+    onlineUsers: sysMsg.onlineUsers,
+    onlineCount: sysMsg.onlineCount
+  };
+};
+interface Payload extends UserMessage, SystemMessage, Login { }
 interface ActionType {
   type: string;
   payload: Payload;
 }
 
 const reducer = (state: StateType, action: ActionType): StateType => {
-  // console.log(state, action);
+  console.log(state, action);
   switch (action.type) {
     case 'login':
       return { ...state, ...login(action.payload) };
@@ -76,12 +83,14 @@ const reducer = (state: StateType, action: ActionType): StateType => {
       return { ...state, ...systemMessage(action.payload, state) };
     case 'UPDATE_USER_MESSAGE':
       return { ...state, ...userMessage(action.payload, state) };
+    case 'UPDATE_ROOM_INFO':
+      return { ...state, ...roomInfo(action.payload) };
     default:
       return state;
   }
 };
 
-const ContextProvider = (props) => {
+const ContextProvider = (props: any) => {
   const [state, dispatch] = useReducer(reducer, initValue);
   return <Context.Provider value={{ state, dispatch }}>{props.children}</Context.Provider>;
 };

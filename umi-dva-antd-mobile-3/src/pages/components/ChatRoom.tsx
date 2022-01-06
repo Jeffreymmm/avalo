@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState,useEffect } from 'react';
 import Messages from './Messages';
 import ChatInput from './ChatInput';
 import { Context } from '../context';
@@ -23,8 +23,7 @@ const generateTime = () => {
 
 const Room = (props: any) => {
   const { state, dispatch }: any = useContext(Context);
-  const [init, setInit] = useState(false);
-  // 更新系统消息
+
   const updateSysMsg = (o: { user: { username: any; uid: any; }; onlineCount: any; onlineUsers: any; }, action: string) => {
     const newMsg = { type: 'system', username: o.user.username, uid: o.user.uid, action: action, msgId: generateMsgId(), time: generateTime() };
     dispatch({
@@ -48,24 +47,36 @@ const Room = (props: any) => {
         message: newMsg
       }
     });
+
+    // dispatch({
+    //   type: 'UPDATE_ROOM_INFO',
+    //   payload: {
+    //     onlineCount: selectGameRoom.peopleNumber,
+    //     onlineUsers: selectGameRoom.onlineUsers,
+    //   }
+    // });
   };
+
+
+  useEffect(() => {
+
+  }, [state.uid]);
+
   // 监听消息发送
   const ready = () => {
-    const { socket } = props;
-    setInit(true);
-    socket.on('login', (o: { user: { username: any; uid: any; }; onlineCount: any; onlineUsers: any; }) => {
+    const { socket } = state.socket;
+    if(!socket) return;
+    socket.on('login', (o: any) => {
       updateSysMsg(o, 'login');
     });
-    socket.on('logout', (o: { user: { username: any; uid: any; }; onlineCount: any; onlineUsers: any; }) => {
+    socket.on('logout', (o: any) => {
       updateSysMsg(o, 'logout');
     });
-    socket.on('message', (obj: { username: any; uid: any; message: any; }) => {
+    socket.on('message', (obj: any) => {
       updateMsg(obj);
     });
   };
-  if (!init) {
-    ready();
-  }
+
   const renderUserList = () => {
     const users = state.onlineUsers;
     let userhtml = '';
