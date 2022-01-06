@@ -5,7 +5,7 @@ import { Context } from '../context';
 import { getGameRooms } from '../service/api.service';
 
 import { List } from 'antd-mobile';
-
+import router from 'umi/router';
 const Item = List.Item;
 const Brief = Item.Brief;
 
@@ -26,18 +26,37 @@ const GameRoom = (props: any) => {
     });
   }, [state.uid]);
 
-  const gotoChatRoom = () => {
-    console.log('123');
-    const {uid ,username } = state;
-    state.socket.emit('login', {uid, username });
+  const gotoChatRoom = (item: any) => {
+    console.log(item);
+    const params = {
+      room_id: item.room_id,
+      roomUserName: state.username,
+      UserId: state.uid,
+      roomUserIdentity: ''
+    }
+    state.socket.emit('login', params);
+  }
 
+
+  // 监听消息发送
+  const ready = () => {
+    const { socket } = props;
+    setInit(true);
+    socket.on('gotoRoom', (o:any) => { 
+      console.log(o);
+
+      router.push('/ChatRoom')
+    });
+  };
+  if (!init) {
+    ready();
   }
 
   return (
     <div className="chat-room">
       <List renderHeader={() => '房间大厅'} className="my-list">
         {gameRooms.map((item: any) => {
-          return <Item key={item.room_id} arrow="horizontal" multipleLine onClick={() => gotoChatRoom()}>
+          return <Item key={item.room_id} arrow="horizontal" multipleLine onClick={() => gotoChatRoom(item)}>
             {item.roomName} <Brief>人数：{item.peopleNumber} 人</Brief>
           </Item>
         })}

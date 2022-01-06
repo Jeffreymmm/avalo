@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import Messages from './Messages';
 import ChatInput from './ChatInput';
 import { Context } from '../context';
+import { ContextProvider } from '../context/index';
 
 // 生成消息id
 const generateMsgId = () => {
@@ -17,11 +18,14 @@ const generateTime = () => {
   return hourText + ':' + minuteText;
 };
 
-const ChatRoom = (props: any) => {
-  const { state, dispatch } = useContext(Context);
+
+
+
+const Room = (props: any) => {
+  const { state, dispatch }: any = useContext(Context);
   const [init, setInit] = useState(false);
   // 更新系统消息
-  const updateSysMsg = (o, action) => {
+  const updateSysMsg = (o: { user: { username: any; uid: any; }; onlineCount: any; onlineUsers: any; }, action: string) => {
     const newMsg = { type: 'system', username: o.user.username, uid: o.user.uid, action: action, msgId: generateMsgId(), time: generateTime() };
     dispatch({
       type: 'UPDATE_SYSTEM_MESSAGE',
@@ -34,9 +38,9 @@ const ChatRoom = (props: any) => {
   };
 
   // 发送新消息
-  const updateMsg = (obj) => {
+  const updateMsg = (obj: { username: any; uid: any; message: any; }) => {
     console.log(obj);
-    
+
     const newMsg = { type: 'chat', username: obj.username, uid: obj.uid, action: obj.message, msgId: generateMsgId(), time: generateTime() };
     dispatch({
       type: 'UPDATE_USER_MESSAGE',
@@ -49,13 +53,13 @@ const ChatRoom = (props: any) => {
   const ready = () => {
     const { socket } = props;
     setInit(true);
-    socket.on('login', (o) => {
+    socket.on('login', (o: { user: { username: any; uid: any; }; onlineCount: any; onlineUsers: any; }) => {
       updateSysMsg(o, 'login');
     });
-    socket.on('logout', (o) => {
+    socket.on('logout', (o: { user: { username: any; uid: any; }; onlineCount: any; onlineUsers: any; }) => {
       updateSysMsg(o, 'logout');
     });
-    socket.on('message', (obj) => {
+    socket.on('message', (obj: { username: any; uid: any; message: any; }) => {
       updateMsg(obj);
     });
   };
@@ -94,4 +98,12 @@ const ChatRoom = (props: any) => {
     </div>
   );
 };
-export default ChatRoom;
+export default function () {
+  return (
+    <div>
+      <ContextProvider>
+        <Room />
+      </ContextProvider>
+    </div>
+  )
+}
