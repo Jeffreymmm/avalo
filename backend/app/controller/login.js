@@ -33,10 +33,16 @@ class LoginController extends Controller {
         UserId
       });
       if (insertRes.affectedRows === 1) {
-        await nsp.emit('gotoRoom',info)
+        let sql = "update gameRooms set peopleOnline = peopleOnline+1 where room_id in (?)"
+        let updateRes = await this.app.mysql.query(sql,[room_id]);
+        console.log(updateRes);
+        await nsp.emit('gotoRoom', info)
       }
     } else {
-      await nsp.emit('gotoRoom',info)
+      let sql = "update gameRooms set peopleOnline = peopleOnline+1 where room_id in (?)"
+      let updateRes = await this.app.mysql.query(sql,[room_id]);
+      console.log(updateRes);
+      await nsp.emit('gotoRoom', info)
     }
   };
 }

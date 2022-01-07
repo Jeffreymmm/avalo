@@ -11,3 +11,10 @@ export function getGameRooms() {
     method: 'GET',
   });
 }
+
+export function getChatRoom(params: any) {
+  return axios(`/api/v1/chatRoom?room_id=${params.id}`, {
+    method: 'GET',
+  });
+}
+

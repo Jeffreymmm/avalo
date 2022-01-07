@@ -11,11 +11,12 @@ const Brief = Item.Brief;
 
 const GameRoom = (props: any) => {
   console.log(props);
-
+  console.log();
+  
   const { state, dispatch }: any = useContext(Context);
   const [gameRooms, setGameRooms] = useState<any>([]); // 房间信息
   const [selectGameRoom, setSelectGameRoom] = useState<any>({}); // 房间信息
-
+  console.log(state);
   useEffect(() => {
     getGameRooms().then(res => {
       console.log(res);
@@ -51,7 +52,8 @@ const GameRoom = (props: any) => {
     const { socket } = props;
     if(!socket) return;
     socket.on('gotoRoom', (o: any) => {
-      router.push({pathname:'./ChatRoom',query:{id:1111}})
+      console.log(o);
+      router.push({pathname:'./ChatRoom',query:{id:o.room_id }})
     });
   }, [props.socket,selectGameRoom]);
 

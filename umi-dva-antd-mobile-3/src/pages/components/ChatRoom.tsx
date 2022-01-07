@@ -1,8 +1,10 @@
-import React, { useContext, useState,useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import Messages from './Messages';
 import ChatInput from './ChatInput';
 import { Context } from '../context';
 import { ContextProvider } from '../context/index';
+import { getChatRoom } from '../service/api.service';
+
 
 // 生成消息id
 const generateMsgId = () => {
@@ -22,8 +24,12 @@ const generateTime = () => {
 
 
 const Room = (props: any) => {
+  console.log(props);
+  
   const { state, dispatch }: any = useContext(Context);
-
+  const [chatRoom, setChatRoom] = useState<any>({}); // 房间信息
+  console.log(state);
+  
   const updateSysMsg = (o: { user: { username: any; uid: any; }; onlineCount: any; onlineUsers: any; }, action: string) => {
     const newMsg = { type: 'system', username: o.user.username, uid: o.user.uid, action: action, msgId: generateMsgId(), time: generateTime() };
     dispatch({
@@ -59,13 +65,37 @@ const Room = (props: any) => {
 
 
   useEffect(() => {
+    console.log(props.data.location.query.id);
+    let params = {
+      id: props.data.location.query.id
+    }
+    getRoomInfo(params)
 
-  }, [state.uid]);
+  }, [props.data.location.query.id]);
+
+
+  const getRoomInfo = (params: { id: any; }) => {
+    getChatRoom(params).then((res: any)=> {
+      console.log(res.data);
+      setChatRoom(res.data)
+      
+      const newMsg = { type: 'system', username: '张三', uid: '444', action: 'login', msgId: generateMsgId(), time: generateTime() };
+      dispatch({
+        type: 'UPDATE_SYSTEM_MESSAGE',
+        payload: {
+          onlineCount: res.data.peopleOnline,
+          onlineUsers: JSON.parse(res.data.onlineUsers),
+          message: newMsg
+        }
+      });
+
+    })
+  }
 
   // 监听消息发送
   const ready = () => {
     const { socket } = state.socket;
-    if(!socket) return;
+    if (!socket) return;
     socket.on('login', (o: any) => {
       updateSysMsg(o, 'login');
     });
@@ -93,7 +123,7 @@ const Room = (props: any) => {
     <div className="chat-room">
       <div className="welcome">
         <div className="room-action">
-          <div className="room-name">鱼头的聊天室 | {props.username}</div>
+          <div className="room-name">{chatRoom.roomName}的聊天室 | {props.username}</div>
           <div className="button">
             <button onClick={() => window.location.reload()}>登出</button>
           </div>
@@ -109,11 +139,11 @@ const Room = (props: any) => {
     </div>
   );
 };
-export default function () {
+export default function (props: any) {
   return (
     <div>
       <ContextProvider>
-        <Room />
+        <Room data={props} />
       </ContextProvider>
     </div>
   )

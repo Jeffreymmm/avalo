@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef } from 'react';
 import { Context } from '../context';
 
-const Message = (props) => {
+const Message = (props:any) => {
   if (props.msgType === 'system') {
     return (
       <div className="one-message system-message">
