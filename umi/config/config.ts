@@ -1,0 +1,18 @@
+import { defineConfig } from 'umi';
+
+export default defineConfig({
+  nodeModulesTransform: {
+    type: 'none',
+  },
+  routes: [
+    { path: '/', component: '@/pages/index' },
+  ],
+  fastRefresh: {},
+  dva: {
+    immer: true,
+    hmr: true,
+  },    
+  antd:{
+      mobile:true,
+  }
+});
