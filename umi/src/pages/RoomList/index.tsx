@@ -15,6 +15,15 @@ const RoomListPage = (props: any) => {
 
   const gotoChatRoom = (item: any) => {
     console.log(item);
+    const params = {
+      room_id: item.room_id,
+      roomUserName: props.index.userName,
+      UserId: props.index.userId,
+      roomUserIdentity: ''
+    }
+    console.log(props.index.socket);
+    
+    props.index.socket.emit('login', params);
   }
 
 
