@@ -1,18 +1,37 @@
 import { defineConfig } from 'umi';
 
+import postCssPxToViewport from 'postcss-px-to-viewport';
+import proxy from './proxy';
+const { REACT_APP_ENV, USE_TABS, SERVER_ADDRESS,LOGO_TYPE } = process.env;
+
+
 export default defineConfig({
   nodeModulesTransform: {
     type: 'none',
   },
+  history: { type: 'browser' },
   routes: [
-    { path: '/', component: '@/pages/index' },
+    { path: '/', component: '@/pages/Login/index' },
+    { path: '/roomList', component: '@/pages/RoomList/index' },
   ],
   fastRefresh: {},
   dva: {
-    immer: true,
+    immer: false,
     hmr: true,
-  },    
-  antd:{
-      mobile:true,
-  }
+  },
+  antd: {
+    mobile: true,
+  },
+  proxy: proxy[REACT_APP_ENV || 'dev'],
+
+  extraPostCSSPlugins: [
+    postCssPxToViewport({
+      viewportWidth: 375, // 视窗的宽度，对应的是我们设计稿的宽度，一般是375
+      unitPrecision: 3, // 指定`px`转换为视窗单位值的小数位数（很多时候无法整除）
+      viewportUnit: 'vw', // 指定需要转换成的视窗单位，建议使用vw
+      selectorBlackList: [], // 指定不转换为视窗单位的类，可以自定义，可以无限添加,建议定义一至两个通用的类名
+      minPixelValue: 1, // 小于或等于`1px`不转换为视窗单位，你也可以设置为你想要的值
+      mediaQuery: false, // 允许在媒体查询中转换`px`
+    }),
+  ],
 });

@@ -1,28 +1,33 @@
-import { Effect, ImmerReducer, Reducer, Subscription } from 'umi';
+import { Effect, Reducer, Subscription } from 'umi';
+import io from 'socket.io-client';
 
-export interface IndexModelState {
-  name: string;
+export interface UserInfoState {
+  userName: string;
+  userId: string;
+  socket:any;
+
 }
 
 export interface IndexModelType {
   namespace: 'index';
-  state: IndexModelState;
+  state: UserInfoState;
   effects: {
     query: Effect;
   };
   reducers: {
-    save: Reducer<IndexModelState>;
+    save: Reducer<UserInfoState>;
     // 启用 immer 之后
-    // save: ImmerReducer<IndexModelState>;
+    // save: ImmerReducer<UserInfoState>;
   };
   subscriptions: { setup: Subscription };
 }
 
 const IndexModel: IndexModelType = {
   namespace: 'index',
-
   state: {
-    name: '',
+    userName: '',
+    userId: '',
+    socket: io('http://127.0.0.1:7001'),
   },
 
   effects: {
@@ -35,19 +40,11 @@ const IndexModel: IndexModelType = {
         ...action.payload,
       };
     },
-    // 启用 immer 之后
-    // save(state, action) {
-    //   state.name = action.payload;
-    // },
   },
   subscriptions: {
     setup({ dispatch, history }) {
       return history.listen(({ pathname }) => {
-        if (pathname === '/') {
-          dispatch({
-            type: 'query',
-          });
-        }
+        console.log(pathname);
       });
     },
   },
