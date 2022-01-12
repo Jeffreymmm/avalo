@@ -22,19 +22,29 @@ const RoomListPage = (props: any) => {
       roomUserIdentity: ''
     }
     console.log(props.index.socket);
-    
+
     props.index.socket.emit('login', params);
+    props.index.socket.on('gotoRoom', (o: any) => {
+      console.log(o);
+      history.push({ pathname: './ChatRoom', query: { id: o.room_id } })
+    });
+
   }
 
 
   useEffect(() => {
+    console.log(props.index);
+
     getGameRooms().then(res => {
-      console.log(res);
+      console.log(res); 
       if (res?.data?.list.length) {
         console.log(res.data.list);
         setGameRooms(res.data.list)
       }
     });
+
+
+
   }, [props.index]);
 
   // 输入输出用户名

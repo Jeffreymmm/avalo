@@ -1,53 +1,52 @@
 import React, { useState, useEffect } from 'react';
 import { connect, history } from 'umi';
 import styles from './index.less';
-import { List, WhiteSpace, Card, SearchBar } from 'antd-mobile'
-
-import { getGameRooms } from '@/service/api.service';
-
-const Item = List.Item;
-const Brief = Item.Brief;
-
-const ChatRommPage = (props: any) => {
+import { NavBar, Icon, Flex, SearchBar } from 'antd-mobile'
+import { getChatRoom } from '@/service/api.service';
+import MessagesPage from './Messages';
+const ChatRoomPage = (props: any) => {
   console.log(props);
 
-  const [gameRooms, setGameRooms] = useState<any>([]); // 房间信息
+  const [chatRoom, setChatRoom] = useState<any>({}); // 房间信息
 
-  const gotoChatRoom = (item: any) => {
-    console.log(item);
-    const params = {
-        room_id: item.room_id,
-        roomUserName: props.index.userName,
-        UserId: props.index.userId,
-        roomUserIdentity: ''
-      }
-      console.log(props.index.socket);
-      
-      props.index.socket.emit('login', params);
-  }
 
 
   useEffect(() => {
-    getGameRooms().then(res => {
-      console.log(res);
-      if (res?.data?.list.length) {
-        console.log(res.data.list);
-        setGameRooms(res.data.list)
-      }
-    });
-  }, [props.index]);
+    console.log(props.location.query.id);
+    let params = {
+      id: props.location.query.id
+    }
+    getRoomInfo(params)
 
-  // 输入输出用户名
+  }, [props.location.query.id]);
+  const getRoomInfo = (params: { id: any; }) => {
+    getChatRoom(params).then((res: any) => {
+      console.log(res.data);
+      setChatRoom(res.data)
+    })
+  }
+
+  const gotoRoomList = () => {
+    history.goBack();
+  }
 
   return (
-    <div className={styles.pageContent}>
-      <List renderHeader={() => '房间大厅'} className={styles.mylist}>
-        {gameRooms.map((item: any) => {
-          return <Item key={item.room_id} arrow="horizontal" multipleLine onClick={() => gotoChatRoom(item)}>
-            {item.roomName} <Brief>人数：{item.peopleNumber} 人</Brief>
-          </Item>
-        })}
-      </List>
+    <div>
+      <Flex style={{height:'100vh'}} direction="column">
+        <NavBar style={{width:'100%'}}
+          mode="light"
+          icon={<Icon type="left" onClick={() => gotoRoomList()} />}
+          onLeftClick={() => console.log('onLeftClick')}
+          rightContent={[
+            <Icon key="0" type="search" style={{ marginRight: '16px' }} />,
+            <Icon key="1" type="ellipsis" />,
+          ]}
+        >{chatRoom.roomName}</NavBar>
+        <Flex.Item style={{width:'100%'}}>
+          <MessagesPage data={chatRoom} />
+        </Flex.Item>
+      </Flex>
+
     </div>
   );
 }
@@ -61,4 +60,4 @@ export default connect(
       loading: loading.models.index,
     })
   },
-)(ChatRommPage);
+)(ChatRoomPage);

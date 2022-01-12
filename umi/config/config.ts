@@ -13,6 +13,7 @@ export default defineConfig({
   routes: [
     { path: '/', component: '@/pages/Login/index' },
     { path: '/roomList', component: '@/pages/RoomList/index' },
+    { path: '/chatRoom', component: '@/pages/ChatRoom/index' },
   ],
   fastRefresh: {},
   dva: {
