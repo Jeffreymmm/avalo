@@ -10,3 +10,4 @@ declare module '*.svg' {
 }
 declare module 'socket.io-client';
 declare module 'postcss-px-to-viewport';
+declare module 'lodash';

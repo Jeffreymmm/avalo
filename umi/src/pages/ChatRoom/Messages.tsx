@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect, history } from 'umi';
 import styles from './index.less';
+import _ from 'lodash';
 
 const MessagesPage = (props: any) => {
     console.log(props);
@@ -10,35 +11,26 @@ const MessagesPage = (props: any) => {
 
     useEffect(() => {
         console.log(props);
-        let obj = props.data.messages;
-        obj = [
-            {
-                msgId: '123',
-                msgType: 'system',
-                msgUser: 'system',
-                action: 'login',
-                uid: '',
-                time: '2022-1-12',
-            },
-            {
-                msgId: '1234',
-                msgType: '1',
-                msgUser: '张三',
-                action: '我去大保健1',
-                uid: '213',
-                time: '2022-1-12',
-            },
-        ]
-
-        if (obj.length) {
-            // let _messages = JSON.parse(obj);
-            setMessages(obj);
+        if (props.data && props.data.messages && props.data.messages.length) {
+            let obj = props.data.messages;
+            let _messages = JSON.parse(obj);
+            setMessages(_messages);
         }
+
+        props.index.socket.on('message', (o: any) => {
+            console.log(o);
+            let _messages = _.cloneDeep(messages) ;
+            _messages.push(o);
+            console.log(_messages);
+
+            setMessages(_messages);
+            console.log(messages);
+            
+        });
+
     }, [props.data]);
 
     return (
-
-
         <div>
             <div className={styles.wxchatContainer}>
                 <div className={styles.window} >
