@@ -22,15 +22,17 @@ const RoomListPage = (props: any) => {
       roomUserIdentity: ''
     }
     console.log(props.index.socket);
-
     props.index.socket.emit('login', params);
+  }
+
+
+  
+  useEffect(() => {
     props.index.socket.on('gotoRoom', (o: any) => {
       console.log(o);
       history.push({ pathname: './ChatRoom', query: { id: o.room_id } })
     });
-
-  }
-
+  }, [props.index.socket]);
 
   useEffect(() => {
     console.log(props.index);

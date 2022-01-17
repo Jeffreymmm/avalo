@@ -1,34 +1,44 @@
 
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import { connect, history } from 'umi';
 import styles from './index.less';
 import _ from 'lodash';
 
 const MessagesPage = (props: any) => {
     console.log(props);
-    const [messages, setMessages] = useState<any>([]); // 聊天记录
+    // const [messages, setMessages] = useState<any>([]); // 聊天记录
+
+    const INIT_STATE = {
+        'messages': []
+    }
+
+    const reducer = (state: any, action: any) => {
+        switch (action.code) {
+            case 'updateMsg':
+                return { ...state, 'messages': [...action.payload] };
+            case 'addMsg':
+                return { ...state, 'messages': [...state.messages ,action.payload] };
+        }
+    }
+
+
+    const [state, dispatch] = useReducer(reducer, INIT_STATE);
 
     useEffect(() => {
         console.log(props);
         if (props.data && props.data.messages && props.data.messages.length) {
             let obj = props.data.messages;
             let _messages = JSON.parse(obj);
-            setMessages(_messages);
+            dispatch({ code: 'updateMsg', payload: _messages })
         }
-
-        props.index.socket.on('message', (o: any) => {
-            console.log(o);
-            let _messages = _.cloneDeep(messages) ;
-            _messages.push(o);
-            console.log(_messages);
-
-            setMessages(_messages);
-            console.log(messages);
-            
-        });
-
-    }, [props.data]);
+        const messagesLenstin = (events: any) => {
+            console.log(events);
+            console.log(state);
+            dispatch({ code: 'addMsg', payload: events })
+        }
+        props.index.socket.on('message', messagesLenstin);
+    }, [props.data.messages]);
 
     return (
         <div>
@@ -36,7 +46,7 @@ const MessagesPage = (props: any) => {
                 <div className={styles.window} >
                     <ul>
                         {
-                            messages.map((message: any) =>
+                            state.messages.map((message: any) =>
                             (
                                 <li key={message.msgId}>
                                     <Message key={message.msgId} msgType={message.msgType} msgUser={message.msgUser} action={message.action} isMe={props.index.userId === message.uid ? true : false} time={message.time} />

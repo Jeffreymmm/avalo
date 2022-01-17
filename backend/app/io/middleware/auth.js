@@ -4,6 +4,7 @@
 module.exports = app => {
   return function* (next) {
     this.socket.emit('res', 'connected!');
+    console.log('connected!');
     yield* next;
     console.log('disconnection!');
   };

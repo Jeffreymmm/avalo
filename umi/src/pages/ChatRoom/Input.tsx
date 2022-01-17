@@ -22,7 +22,9 @@ const InputPage = (props: any) => {
                 roomId: props.roomId
             };
 
-            props.index.socket.emit('message', obj);
+            // props.index.socket.emit('message', obj);
+            
+            setInputMessage('');
         }
     }
 

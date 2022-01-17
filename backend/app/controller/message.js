@@ -55,7 +55,7 @@ class MessageController extends Controller {
     const resMessage = await ctx.service.chatRoom.setMessage(message.roomId, arr) || [];
 
     console.log(resMessage);
-
+    console.log('发送：',obj);
     nsp.emit('message', obj);
 
   };
