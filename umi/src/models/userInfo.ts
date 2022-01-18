@@ -1,5 +1,7 @@
 import { Effect, Reducer, Subscription } from 'umi';
 import io from 'socket.io-client';
+import proxy from '../../config/proxy';
+const { REACT_APP_ENV, USE_TABS, SERVER_ADDRESS,LOGO_TYPE } = process.env;
 
 export interface UserInfoState {
   userName: string;
@@ -27,7 +29,7 @@ const IndexModel: IndexModelType = {
   state: {
     userName: '',
     userId: '',
-    socket: io('http://127.0.0.1:7002'),
+    socket: io( proxy[REACT_APP_ENV || '139.9.100.223:7002']),
   },
 
   effects: {
