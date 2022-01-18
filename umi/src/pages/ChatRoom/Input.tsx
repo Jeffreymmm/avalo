@@ -12,8 +12,6 @@ const InputPage = (props: any) => {
 
 
     const sendMessage = () => {
-        console.log(inputMessage);
-
         if (inputMessage) {
             const obj = {
                 uid: props.index.userId,
@@ -22,17 +20,19 @@ const InputPage = (props: any) => {
                 roomId: props.roomId
             };
 
-            // props.index.socket.emit('message', obj);
+            props.index.socket.emit('message', obj);
             
-            setInputMessage('');
         }
+        setInputMessage('');
     }
 
     return (
         <div className={styles.inputContent}>
             <input type="\" value={inputMessage} onChange={(val: any) => {
-                console.log(val);
-                setInputMessage(val.target.value)
+                console.log(inputMessage);
+                if(val?.target?.value) {
+                    setInputMessage(val.target.value)
+                }
             }} />
             <Button onClick={() => sendMessage()} type="primary" size="small" style={{ marginLeft: '4px' }} >发送</Button>
         </div>

@@ -1,26 +1,5 @@
 'use strict';
-
 // 将收到的消息发送给客户端
-module.exports = app => {
-  return function* () {
-
-    console.log(this.args);
-    const message = this.args[0];
-    console.log('login 控制器打印', message);
-    let obj = {
-      msgId: String(new Date().getTime()) + Math.floor(Math.random() * 999 + 1),
-      msgType: 'user',
-      msgUser: message.username,
-      action: message.message,
-      uid: message.uid,
-      time: new Date()
-    }
-    this.socket.emit('message', obj);
-  };
-};
-
-
-'use strict';
 
 const Controller = require('egg').Controller;
 

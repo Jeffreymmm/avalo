@@ -1,6 +1,6 @@
 
 
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useRef, useEffect, useReducer, useState, createRef } from 'react';
 import { connect, history } from 'umi';
 import styles from './index.less';
 import _ from 'lodash';
@@ -14,16 +14,18 @@ const MessagesPage = (props: any) => {
     }
 
     const reducer = (state: any, action: any) => {
+
         switch (action.code) {
             case 'updateMsg':
                 return { ...state, 'messages': [...action.payload] };
             case 'addMsg':
-                return { ...state, 'messages': [...state.messages ,action.payload] };
+                return { ...state, 'messages': [...state.messages, action.payload] };
         }
     }
 
 
     const [state, dispatch] = useReducer(reducer, INIT_STATE);
+
 
     useEffect(() => {
         console.log(props);
@@ -32,27 +34,47 @@ const MessagesPage = (props: any) => {
             let _messages = JSON.parse(obj);
             dispatch({ code: 'updateMsg', payload: _messages })
         }
-        const messagesLenstin = (events: any) => {
-            console.log(events);
-            console.log(state);
-            dispatch({ code: 'addMsg', payload: events })
-        }
-        props.index.socket.on('message', messagesLenstin);
+
     }, [props.data.messages]);
 
+
+    const [isInitSocket, setIsInitSocket] = useState<boolean>(false)
+
+    const messagesEndRef:any = useRef(null)
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+    }
+    useEffect(() => {
+        if (!isInitSocket) {
+            console.log(`初始化socket`);
+            props.index.socket.on('message', (events: any) => {
+                dispatch({ code: 'addMsg', payload: events });
+            });
+            setIsInitSocket(true);
+        }
+    }, [props.index.socket]);
+
+
+    useEffect(() => {
+        scrollToBottom()
+    }, [state.messages])
+
     return (
-        <div>
+        <div style={{ height: '100%;' }}>
             <div className={styles.wxchatContainer}>
                 <div className={styles.window} >
-                    <ul>
+                    <ul style={{ height: '100%;' }} >
                         {
                             state.messages.map((message: any) =>
                             (
                                 <li key={message.msgId}>
-                                    <Message key={message.msgId} msgType={message.msgType} msgUser={message.msgUser} action={message.action} isMe={props.index.userId === message.uid ? true : false} time={message.time} />
+                                    <Message key={message.msgId} msgType={message.msgType} msgUser={message.msgUser} action={message.action} isMe={props.index.userName === message.            // props.index.socket.emit('message', obj);
+                                        msgUser ? true : false} time={message.time} />
                                 </li >
                             ))
                         }
+                        <div ref={messagesEndRef} />
                     </ul >
 
                 </div>
