@@ -16,7 +16,7 @@ interface StateType {
 const initValue: StateType = {
   username: '',
   uid: '',
-  socket: io('http://127.0.0.1:7001'),
+  socket: io('http://127.0.0.1:7002'),
   messages: [],
   onlineUsers: [],
   onlineCount: 0,

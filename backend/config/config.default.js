@@ -24,16 +24,25 @@ module.exports = appInfo => {
   };
 
 
+  config.cluster = {
+    listen: {
+      path: '',
+      port: 7002,
+      hostname: 'localhost'
+    }
+  };
+
+
   config.security = {
-    csrf:{
-      enable:false,
+    csrf: {
+      enable: false,
     },
-    domainWhiteList:['*']
+    domainWhiteList: ['*']
   }
 
   config.cors = {
-    origin:'*',
-    allowMethods:'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
+    origin: '*',
+    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
   }
 
 
@@ -60,8 +69,8 @@ module.exports = appInfo => {
   config.io = {
     namespace: {
       '/': {
-        connectionMiddleware: [ 'auth' ],
-        packetMiddleware: [ 'filter' ],
+        connectionMiddleware: ['auth'],
+        packetMiddleware: ['filter'],
       },
     },
   };

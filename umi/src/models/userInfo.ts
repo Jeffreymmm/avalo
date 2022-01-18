@@ -27,7 +27,7 @@ const IndexModel: IndexModelType = {
   state: {
     userName: '',
     userId: '',
-    socket: io('http://127.0.0.1:7001'),
+    socket: io('http://127.0.0.1:7002'),
   },
 
   effects: {
