@@ -19,8 +19,7 @@ class LoginController extends Controller {
       UserId
     } = info;
 
-    // 1.查询一条数据，不管条件是什么，只能查一条
-
+    // 查询一条数据，不管条件是什么，只能查一条
     let getResult = await this.app.mysql.query(
       'select * from roomUser where roomUserName=?', [roomUserName]
     );

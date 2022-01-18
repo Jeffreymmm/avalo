@@ -56,7 +56,7 @@ const RoomListPage = (props: any) => {
       <List renderHeader={() => '房间大厅'} className={styles.mylist}>
         {gameRooms.map((item: any) => {
           return <Item key={item.room_id} arrow="horizontal" multipleLine onClick={() => gotoChatRoom(item)}>
-            {item.roomName} <Brief>人数：{item.peopleNumber} 人</Brief>
+            {item.roomName} <Brief>人数：{item.peopleOnline} 人</Brief>
           </Item>
         })}
       </List>

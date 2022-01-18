@@ -40,7 +40,7 @@ const MessagesPage = (props: any) => {
 
     const [isInitSocket, setIsInitSocket] = useState<boolean>(false)
 
-    const messagesEndRef:any = useRef(null)
+    const messagesEndRef: any = useRef(null)
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -97,8 +97,12 @@ const Message = (props: any) => {
             <div className={styles.message}>
                 <p className={styles.time}> <span> {props.time} </span> </p>
                 {/* <p className={`${styles.time} ${styles.system}`}> <span></span> </p> */}
-                <div className={props.isMe ? `${styles.main} ${styles.self}` : `${styles.main}`}>
+                <div style={{
+                        position: "relative"
+                    }} className={props.isMe ? `${styles.main} ${styles.self}` : `${styles.main}`}>
                     <img className={styles.avatar} src={`https://img1.baidu.com/it/u=2476943548,3374522247&fm=253&fmt=auto&app=138&f=JPEG?w=400&h=400`} width="45" height="45" />
+                    <span style={{position: "absolute",top: "-7vw"
+                    }}>{props.msgUser}</span>
                     <div className={styles.text} > {props.action} </div>
                 </div>
             </div>

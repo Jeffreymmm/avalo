@@ -29,7 +29,7 @@ const IndexModel: IndexModelType = {
   state: {
     userName: '',
     userId: '',
-    socket: io( proxy[REACT_APP_ENV || '139.9.100.223:7002']),
+    socket: io( `127.0.0.1:7002` || '139.9.100.223:7002'),
   },
 
   effects: {

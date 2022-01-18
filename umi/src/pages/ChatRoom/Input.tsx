@@ -21,7 +21,7 @@ const InputPage = (props: any) => {
             };
 
             props.index.socket.emit('message', obj);
-            
+
         }
         setInputMessage('');
     }
@@ -29,10 +29,7 @@ const InputPage = (props: any) => {
     return (
         <div className={styles.inputContent}>
             <input type="\" value={inputMessage} onChange={(val: any) => {
-                console.log(inputMessage);
-                if(val?.target?.value) {
-                    setInputMessage(val.target.value)
-                }
+                setInputMessage(val.target.value)
             }} />
             <Button onClick={() => sendMessage()} type="primary" size="small" style={{ marginLeft: '4px' }} >发送</Button>
         </div>
