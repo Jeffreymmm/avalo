@@ -30,7 +30,7 @@ const IndexModel: IndexModelType = {
   state: {
     userName: '',
     userId: '',
-    socket: '',
+    socket: io(`139.9.100.223:7002`),
     userImage:'1'
   },
 

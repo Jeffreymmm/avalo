@@ -17,7 +17,8 @@ const LoginPage = (props: any) => {
     // 获取用户Id
     const userId = generateUid();
     const _userName = userName ? userName : `游客${userId}`;
-    dispatch({ type: 'index/save', payload: { userName: _userName, userId ,socket: io( `127.0.0.1:7002/213123=213213` || '139.9.100.223:7002')} });
+    // ,socket: io( `127.0.0.1:7002/213123=213213` || '139.9.100.223:7002')
+    dispatch({ type: 'index/save', payload: { userName: _userName, userId } });
     console.log(props);
     history.push('/RoomList')
   }
