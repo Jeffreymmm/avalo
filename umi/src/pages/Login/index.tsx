@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { connect , history   } from 'umi';
 import styles from './index.less';
 import { WingBlank, WhiteSpace, Card, SearchBar } from 'antd-mobile'
+import io from 'socket.io-client';
 
 const generateUid = () => String(new Date().getTime()) + Math.floor(Math.random() * 999 + 1);
 
@@ -16,7 +17,7 @@ const LoginPage = (props: any) => {
     // 获取用户Id
     const userId = generateUid();
     const _userName = userName ? userName : `游客${userId}`;
-    dispatch({ type: 'index/save', payload: { userName: _userName, userId } });
+    dispatch({ type: 'index/save', payload: { userName: _userName, userId ,socket: io( `127.0.0.1:7002/213123=213213` || '139.9.100.223:7002')} });
     console.log(props);
     history.push('/RoomList')
   }

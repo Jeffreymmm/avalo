@@ -7,7 +7,7 @@ export interface UserInfoState {
   userName: string;
   userId: string;
   socket:any;
-
+  userImage: string;
 }
 
 export interface IndexModelType {
@@ -18,6 +18,7 @@ export interface IndexModelType {
   };
   reducers: {
     save: Reducer<UserInfoState>;
+    updateImg: Reducer<UserInfoState>;
     // 启用 immer 之后
     // save: ImmerReducer<UserInfoState>;
   };
@@ -29,7 +30,8 @@ const IndexModel: IndexModelType = {
   state: {
     userName: '',
     userId: '',
-    socket: io( `127.0.0.1:7002` || '139.9.100.223:7002'),
+    socket: '',
+    userImage:'1'
   },
 
   effects: {
@@ -37,6 +39,12 @@ const IndexModel: IndexModelType = {
   },
   reducers: {
     save(state, action) {
+      return {
+        ...state,
+        ...action.payload,
+      };
+    },
+    updateImg(state, action) {
       return {
         ...state,
         ...action.payload,

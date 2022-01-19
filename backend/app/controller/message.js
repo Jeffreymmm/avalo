@@ -18,6 +18,7 @@ class MessageController extends Controller {
       msgUser: message.username,
       action: message.message,
       uid: message.uid,
+      userImage: message.userImage,
       time: new Date()
     }
 

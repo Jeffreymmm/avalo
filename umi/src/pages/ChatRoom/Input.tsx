@@ -17,7 +17,8 @@ const InputPage = (props: any) => {
                 uid: props.index.userId,
                 username: props.index.userName,
                 message: inputMessage,
-                roomId: props.roomId
+                roomId: props.roomId,
+                userImage:props.index.userImage,
             };
 
             props.index.socket.emit('message', obj);

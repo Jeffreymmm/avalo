@@ -49,7 +49,16 @@ const MessagesPage = (props: any) => {
         if (!isInitSocket) {
             console.log(`初始化socket`);
             props.index.socket.on('message', (events: any) => {
+                console.log(events);
                 dispatch({ code: 'addMsg', payload: events });
+            });
+
+            props.index.socket.on('connected', (events: any) => {
+                console.log('connected',events);
+            });
+
+            props.index.socket.on('disconnection', (events: any) => {
+                console.log('disconnection',events);
             });
             setIsInitSocket(true);
         }
@@ -69,7 +78,7 @@ const MessagesPage = (props: any) => {
                             state.messages.map((message: any) =>
                             (
                                 <li key={message.msgId}>
-                                    <Message key={message.msgId} msgType={message.msgType} msgUser={message.msgUser} action={message.action} isMe={props.index.userName === message.            // props.index.socket.emit('message', obj);
+                                    <Message userImage={message.userImage} key={message.msgId} msgType={message.msgType} msgUser={message.msgUser} action={message.action} isMe={props.index.userName === message.            // props.index.socket.emit('message', obj);
                                         msgUser ? true : false} time={message.time} />
                                 </li >
                             ))
@@ -89,7 +98,7 @@ const Message = (props: any) => {
     if (props.msgType === 'system') {
         return (
             <div className={styles.message}>
-                <p className={styles.time}> <span> {props.msgUser}  {props.action === 'login' ? '进入了聊天室11' : '离开了聊天室'}</span> </p>
+                <p className={styles.time}> <span> {props.msgUser}  {props.action === 'login' ? '进入了聊天室' : '离开了聊天室'}</span> </p>
             </div>
         );
     } else {
@@ -100,7 +109,7 @@ const Message = (props: any) => {
                 <div style={{
                         position: "relative"
                     }} className={props.isMe ? `${styles.main} ${styles.self}` : `${styles.main}`}>
-                    <img className={styles.avatar} src={`https://img1.baidu.com/it/u=2476943548,3374522247&fm=253&fmt=auto&app=138&f=JPEG?w=400&h=400`} width="45" height="45" />
+                    <img className={styles.avatar} src={require(`/src/assets/userImg/${props.userImage}.png`)} width="45" height="45" />
                     <span style={{position: "absolute",top: "-7vw"
                     }}>{props.msgUser}</span>
                     <div className={styles.text} > {props.action} </div>
