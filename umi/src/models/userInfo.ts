@@ -28,9 +28,9 @@ export interface IndexModelType {
 const IndexModel: IndexModelType = {
   namespace: 'index',
   state: {
-    userName: '',
+    userName: 'REACT_APP_ENV',
     userId: '',
-    socket: io( `127.0.0.1:7002` || '139.9.100.223:7002'),
+    socket: io(REACT_APP_ENV === 'dev' ? '139.9.100.223' : '139.9.100.223:80/react11'),
     userImage:'1'
   },
 
