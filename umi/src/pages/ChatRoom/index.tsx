@@ -23,13 +23,19 @@ const ChatRoomPage = (props: any) => {
   const getRoomInfo = (params: { id: any; }) => {
     getChatRoom(params).then((res: any) => {
       console.log(res.data);
-      if(res.data ) {
+      if (res.data) {
         setChatRoom(res.data)
       }
     })
   }
 
   const gotoRoomList = () => {
+
+    const obj = {
+      roomUserName: props.index.userName,
+      roomId: props.location.query.id,
+    };
+    props.index.socket.emit('leave', obj);
     history.goBack();
   }
 
@@ -45,7 +51,7 @@ const ChatRoomPage = (props: any) => {
             <Icon key="1" type="ellipsis" />,
           ]}
         >{chatRoom.roomName}</NavBar>
-        <Flex.Item style={{ width: '100%' , overflow: 'auto'}}>
+        <Flex.Item style={{ width: '100%', overflow: 'auto' }}>
           <MessagesPage data={chatRoom} roomId={props.location.query.id} />
         </Flex.Item>
         <InputPage roomId={props.location.query.id} />
