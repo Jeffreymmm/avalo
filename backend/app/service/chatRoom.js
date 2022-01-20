@@ -13,7 +13,6 @@ class ChatRoomService extends Service {
     let getResult = await this.app.mysql.query(
       'select * from gameRooms where room_id=?', [room_id]
     );
-    console.log(getResult);
     return getResult
     // 返回查询结果
   }
@@ -23,7 +22,6 @@ class ChatRoomService extends Service {
       room_id: roomId,
       messages: JSON.stringify(arr)
     };
-    console.log(messages);
     let updateResultById = await this.app.mysql.query(
       'update gameRooms set messages =? where room_id=?',[JSON.stringify(arr),roomId]
   );

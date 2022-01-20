@@ -16,7 +16,7 @@ const RoomListPage = (props: any) => {
   const [gameRooms, setGameRooms] = useState<any>([]); // 房间信息
 
 
-  const [isOpen, setIsOpen] = useState<any>(true); // drawer
+  const [isOpen, setIsOpen] = useState<any>(false); // drawer
 
 
   const gotoChatRoom = (item: any) => {
@@ -29,16 +29,9 @@ const RoomListPage = (props: any) => {
     }
     console.log(props.index.socket);
     props.index.socket.emit('login', params);
+    history.push({ pathname: './ChatRoom', query: { id: item.room_id } })
   }
 
-
-
-  useEffect(() => {
-    props.index.socket.on('gotoRoom', (o: any) => {
-      console.log(o);
-      history.push({ pathname: './ChatRoom', query: { id: o.room_id } })
-    });
-  }, [props.index.socket]);
 
   useEffect(() => {
     console.log(props.index);
@@ -50,9 +43,6 @@ const RoomListPage = (props: any) => {
         setGameRooms(res.data.list)
       }
     });
-
-
-
   }, [props.index]);
 
   // 输入输出用户名

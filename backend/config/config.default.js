@@ -24,6 +24,8 @@ module.exports = appInfo => {
   };
 
 
+  // add your user config here
+
   config.cluster = {
     listen: {
       path: '',

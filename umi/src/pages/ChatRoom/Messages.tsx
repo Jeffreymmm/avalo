@@ -4,6 +4,7 @@ import React, { useRef, useEffect, useReducer, useState, createRef } from 'react
 import { connect, history } from 'umi';
 import styles from './index.less';
 import _ from 'lodash';
+import moment from 'moment';
 
 const MessagesPage = (props: any) => {
     console.log(props);
@@ -53,8 +54,9 @@ const MessagesPage = (props: any) => {
                 dispatch({ code: 'addMsg', payload: events });
             });
 
-            props.index.socket.on('connected', (events: any) => {
+            props.index.socket.on('system', (events: any) => {
                 console.log('connected',events);
+                dispatch({ code: 'addMsg', payload: events });
             });
 
             props.index.socket.on('disconnection', (events: any) => {
